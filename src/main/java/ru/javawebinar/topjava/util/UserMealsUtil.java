@@ -33,9 +33,11 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        final Map<LocalDate, Integer> caloriesPerDateMap = new HashMap<>();
-        mealList.forEach(meal -> caloriesPerDateMap.compute(meal.getDateTime().toLocalDate(), (k, v) -> v == null ? meal.getCalories() : v + meal.getCalories()));
-        return mealList.parallelStream()
+        // Calculating sum of calories per each date in mealList:
+        final Map<LocalDate, Integer> caloriesPerDateMap = mealList.stream()
+                .collect( Collectors.groupingBy(meal -> meal.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)) );
+
+        return mealList.parallelStream() // note: use of parallelStream makes sense only if mealList is large enough (about 10 000 elements or more)
                 .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
                 .map(userMeal -> new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories()
                         , caloriesPerDateMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay))
