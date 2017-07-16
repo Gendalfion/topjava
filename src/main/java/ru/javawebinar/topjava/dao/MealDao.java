@@ -9,4 +9,6 @@ public interface MealDao {
     List<Meal> getAll ();
 
     void add(Meal meal);
+
+    void removeById(int id);
 }

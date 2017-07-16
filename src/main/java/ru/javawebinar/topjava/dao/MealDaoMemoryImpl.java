@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoMemoryImpl implements MealDao {
+    private static final Logger LOG = LoggerFactory.getLogger(MealDaoMemoryImpl.class);
+
     private Map<Integer, Meal> mealMap = new ConcurrentHashMap<>();
     private AtomicInteger curID = new AtomicInteger(0);
 
@@ -36,5 +40,12 @@ public class MealDaoMemoryImpl implements MealDao {
     public void add(Meal meal) {
         int id = curID.getAndIncrement();
         mealMap.put(id, new Meal(id, meal.getDateTime(), meal.getDescription(), meal.getCalories()));
+        LOG.debug("add: {}", meal);
+    }
+
+    @Override
+    public void removeById(int id) {
+        Meal meal = mealMap.remove(id);
+        LOG.debug("remove: id = {}, meal = {}", id, meal);
     }
 }

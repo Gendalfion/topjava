@@ -32,12 +32,17 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String forward = "meals.jsp";
-
+        String action = req.getParameter("action");
         log.debug("doGet: {}?{}", req.getRequestURI(), req.getQueryString());
-        req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
 
-        RequestDispatcher view = req.getRequestDispatcher(forward);
-        view.forward(req, resp);
+        if ("delete".equals(action)) {
+            int idToDelete = Integer.parseInt(req.getParameter("mealId"));
+            mealService.removeById(idToDelete);
+            resp.sendRedirect("meals");
+        } else {
+            req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
+            RequestDispatcher view = req.getRequestDispatcher("meals.jsp");
+            view.forward(req, resp);
+        }
     }
 }

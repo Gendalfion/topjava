@@ -19,4 +19,9 @@ public class MealServiceImpl implements MealService {
         return MealsUtil.getFilteredWithExceeded(mealDao.getAll(), LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 
+    @Override
+    public void removeById(int id) {
+        mealDao.removeById(id);
+    }
+
 }

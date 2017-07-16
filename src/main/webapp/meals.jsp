@@ -22,6 +22,8 @@
     }
 </style>
 
+<jsp:useBean id="mealsWithExceed" scope="request" type="java.util.List"/>
+<c:if test="${mealsWithExceed.size() > 0}">
 <table border=0>
     <thead>
     <tr>
@@ -32,18 +34,22 @@
     </tr>
     </thead>
     <tbody>
-    <jsp:useBean id="mealsWithExceed" scope="request" type="java.util.List"/>
-    <c:forEach items="${mealsWithExceed}" var="mealsWithExceed">
-        <tr style="color: <c:out value="${mealsWithExceed.exceed ? 'red' : 'green'}"/>">
-            <td><javatime:format value="${mealsWithExceed.dateTime}" style="MS"/></td>
-            <td><c:out value="${mealsWithExceed.description}"/></td>
-            <td><c:out value="${mealsWithExceed.calories}"/></td>
-            <td><a href="meals?action=edit&mealId=<c:out value="${mealsWithExceed.id}"/>">Изменить</a></td>
-            <td><a href="meals?action=delete&mealId=<c:out value="${mealsWithExceed.id}"/>">Удалить</a></td>
+
+    <c:forEach items="${mealsWithExceed}" var="meal">
+        <tr style="color: <c:out value="${meal.exceed ? 'red' : 'green'}"/>">
+            <td><javatime:format value="${meal.dateTime}" style="MS"/></td>
+            <td><c:out value="${meal.description}"/></td>
+            <td><c:out value="${meal.calories}"/></td>
+            <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Изменить</a></td>
+            <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Удалить</a></td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+</c:if>
+<c:if test="${mealsWithExceed.size() == 0}">
+    <h3>Нет данных для отображения...</h3>
+</c:if>
 
 </body>
 </html>

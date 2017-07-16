@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MealService {
     List<MealWithExceed> getByCalories (int caloriesPerDay);
+
+    void removeById(int id);
 }
