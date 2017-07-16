@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.dao.MealDaoMemoryImpl;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.MealServiceImpl;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +20,8 @@ public class MealServlet extends HttpServlet {
 
     private MealService mealService;
 
+    private final int userCaloriesMock = 2000;
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -29,7 +32,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //super.doGet(req, resp);
-        resp.sendRedirect("meals.jsp");
+        String forward = "meals.jsp";
+
+        req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
+
+        RequestDispatcher view = req.getRequestDispatcher(forward);
+        view.forward(req, resp);
     }
 }
