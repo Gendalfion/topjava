@@ -44,10 +44,6 @@ public class MealWithExceed {
         return exceed;
     }
 
-    public Date getDate () {
-        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
     @Override
     public String toString() {
         return "UserMealWithExceed{" +

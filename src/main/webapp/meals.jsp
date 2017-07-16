@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -35,7 +35,7 @@
     <jsp:useBean id="mealsWithExceed" scope="request" type="java.util.List"/>
     <c:forEach items="${mealsWithExceed}" var="mealsWithExceed">
         <tr style="color: <c:out value="${mealsWithExceed.exceed ? 'red' : 'green'}"/>">
-            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${mealsWithExceed.date}"/></td>
+            <td><javatime:format value="${mealsWithExceed.dateTime}" style="MS"/></td>
             <td><c:out value="${mealsWithExceed.description}"/></td>
             <td><c:out value="${mealsWithExceed.calories}"/></td>
             <td><a href="meals?action=edit&mealId=<c:out value="${mealsWithExceed.id}"/>">Изменить</a></td>

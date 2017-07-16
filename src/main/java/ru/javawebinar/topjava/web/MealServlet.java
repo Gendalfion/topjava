@@ -34,6 +34,7 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String forward = "meals.jsp";
 
+        log.debug("doGet: {}?{}", req.getRequestURI(), req.getQueryString());
         req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
 
         RequestDispatcher view = req.getRequestDispatcher(forward);
