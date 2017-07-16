@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -22,6 +23,11 @@ public class MealServiceImpl implements MealService {
     @Override
     public void removeById(int id) {
         mealDao.removeById(id);
+    }
+
+    @Override
+    public Meal getById(int id) {
+        return mealDao.getById(id);
     }
 
 }

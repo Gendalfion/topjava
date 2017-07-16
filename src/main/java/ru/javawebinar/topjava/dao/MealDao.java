@@ -11,4 +11,6 @@ public interface MealDao {
     void add(Meal meal);
 
     void removeById(int id);
+
+    Meal getById(int id);
 }

@@ -48,4 +48,11 @@ public class MealDaoMemoryImpl implements MealDao {
         Meal meal = mealMap.remove(id);
         LOG.debug("remove: id = {}, meal = {}", id, meal);
     }
+
+    @Override
+    public Meal getById(int id) {
+        Meal meal = mealMap.get(id);
+        LOG.debug("getById: id = {}, meal = {}", id, meal);
+        return meal;
+    }
 }

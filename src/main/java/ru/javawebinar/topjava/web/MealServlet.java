@@ -40,9 +40,18 @@ public class MealServlet extends HttpServlet {
             mealService.removeById(idToDelete);
             resp.sendRedirect("meals");
         } else {
+            if ("edit".equals(action)) {
+                int idToEdit = Integer.parseInt(req.getParameter("mealId"));
+                req.setAttribute("mealToEdit", mealService.getById(idToEdit));
+            }
             req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
             RequestDispatcher view = req.getRequestDispatcher("meals.jsp");
             view.forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 }
