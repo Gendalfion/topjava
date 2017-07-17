@@ -30,4 +30,13 @@ public class MealServiceImpl implements MealService {
         return mealDao.getById(id);
     }
 
+    @Override
+    public void add(Meal meal) {
+        mealDao.add(meal);
+    }
+
+    @Override
+    public void update(Meal meal) {
+        mealDao.update(meal);
+    }
 }

@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.dao.MealDaoMemoryImpl;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.MealServiceImpl;
 
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/meals")
 public class MealServlet extends HttpServlet {
@@ -21,6 +24,8 @@ public class MealServlet extends HttpServlet {
     private MealService mealService;
 
     private final int userCaloriesMock = 2000;
+
+    private final DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     @Override
     public void init() throws ServletException {
@@ -38,6 +43,14 @@ public class MealServlet extends HttpServlet {
         if ("delete".equals(action)) {
             int idToDelete = Integer.parseInt(req.getParameter("mealId"));
             mealService.removeById(idToDelete);
+            resp.sendRedirect("meals");
+        } else if ("update_add".equals(action)) {
+            int idToUpdate = Integer.parseInt(req.getParameter("id"));
+            LocalDateTime dateTime = LocalDateTime.parse(req.getParameter("dateTime"), dtf);
+            String description = req.getParameter("description");
+            int calories = Integer.parseInt(req.getParameter("calories"));
+
+            mealService.update(new Meal(idToUpdate, dateTime, description, calories));
             resp.sendRedirect("meals");
         } else {
             if ("edit".equals(action)) {

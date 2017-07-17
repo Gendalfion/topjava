@@ -11,4 +11,8 @@ public interface MealService {
     void removeById(int id);
 
     Meal getById(int id);
+
+    void add(Meal meal);
+
+    void update(Meal meal);
 }

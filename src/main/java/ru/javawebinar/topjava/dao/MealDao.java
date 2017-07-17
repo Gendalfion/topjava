@@ -13,4 +13,6 @@ public interface MealDao {
     void removeById(int id);
 
     Meal getById(int id);
+
+    void update(Meal meal);
 }

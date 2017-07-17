@@ -55,4 +55,15 @@ public class MealDaoMemoryImpl implements MealDao {
         LOG.debug("getById: id = {}, meal = {}", id, meal);
         return meal;
     }
+
+    @Override
+    public void update(Meal meal) {
+        int curId = curID.get();
+        if (meal.getId() >= curId) {
+            LOG.warn("update: invalid id for update (id = {}, curId = {})", meal.getId(), curId);
+        } else {
+            Meal oldMeal = mealMap.put(meal.getId(), meal);
+            LOG.debug("update: oldMeal = {}, newMeal = {}", oldMeal, meal);
+        }
+    }
 }

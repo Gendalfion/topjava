@@ -30,7 +30,7 @@
 <table border=0>
     <thead>
     <tr>
-        <th>Дата/Время</th>
+        <th>Дата/время</th>
         <th>Описание</th>
         <th>Калории</th>
         <th colspan=2>Изменить/Удалить</th>
@@ -57,10 +57,15 @@
 <%--@elvariable id="mealToEdit" type="ru.javawebinar.topjava.model.Meal"--%>
 <c:if test="${not empty mealToEdit}">
     <jsp:useBean id="mealToEdit" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
-    <h3>Добавление/удаление еды:</h3>
-    <form action="meals?action=edit_add" method="post">
+    <h3><c:out value="${mealToEdit.id == 0 ? 'Добавление': 'Изменение'}"/> еды:</h3>
+    <form action="meals?action=update_add" method="post">
+        <input name="id" value="<c:out value="${mealToEdit.id}"/>" type="hidden">
         <table>
             <tbody>
+            <tr>
+                <td>Дата/время:</td>
+                <td><input title="Дата/время" type="datetime-local" name="dateTime" value="<c:out value="${mealToEdit.dateTime}"/>"></td>
+            </tr>
             <tr>
                 <td>Описание:</td>
                 <td><input title="Описание" type="text" name="description" value="<c:out value="${mealToEdit.description}"/>"></td>
@@ -71,6 +76,10 @@
             </tr>
             </tbody>
         </table>
+
+        <button type="submit" title="Подтвердить действие">
+            <c:out value="${mealToEdit.id == 0 ? 'Добавить': 'Изменить'}"/>
+        </button>
 
         <button type="submit" formaction="meals" title="Отмена изменений">Отмена</button>
     </form>
