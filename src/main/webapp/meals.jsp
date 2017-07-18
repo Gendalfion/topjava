@@ -19,11 +19,43 @@
         thead > tr {
             background-color: burlywood;
         }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            color: green;
+            background-color: lightblue;
+        }
+
+        .error {
+            color: red;
+            background-color: #ffc9ba;
+        }
     </style>
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Моя еда</h2>
+
+<%--@elvariable id="mealToEdit" type="ru.javawebinar.topjava.model.Meal"--%>
+<c:if test="${empty mealToEdit}">
+    <h4><a href="meals?action=add">Добавить еду...</a></h4>
+</c:if>
+
+<c:if test="${not empty param.message}">
+    <div class="message">
+        <h5>${param.message}</h5>
+    </div>
+</c:if>
+
+<c:if test="${not empty param.error}">
+    <div class="error">
+        <h5>${param.error}</h5>
+    </div>
+</c:if>
 
 <jsp:useBean id="mealsWithExceed" scope="request" type="java.util.List"/>
 <c:if test="${mealsWithExceed.size() > 0}">
@@ -54,35 +86,44 @@
     <h3>Нет данных для отображения...</h3>
 </c:if>
 
-<%--@elvariable id="mealToEdit" type="ru.javawebinar.topjava.model.Meal"--%>
 <c:if test="${not empty mealToEdit}">
     <jsp:useBean id="mealToEdit" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
-    <h3><c:out value="${mealToEdit.id == 0 ? 'Добавление': 'Изменение'}"/> еды:</h3>
+    <c:set var ="isMealAddForm" scope = "request" value = "${mealToEdit.id < 0}"/>
+    <h3><c:out value="${isMealAddForm ? 'Добавление': 'Изменение'}"/> еды:</h3>
+
     <form action="meals?action=update_add" method="post">
         <input name="id" value="<c:out value="${mealToEdit.id}"/>" type="hidden">
         <table>
             <tbody>
             <tr>
                 <td>Дата/время:</td>
-                <td><input title="Дата/время" type="datetime-local" name="dateTime" value="<c:out value="${mealToEdit.dateTime}"/>"></td>
+                <td><input title="Дата/время" type="datetime-local" name="dateTime" value="${mealToEdit.dateTime}"></td>
             </tr>
             <tr>
                 <td>Описание:</td>
-                <td><input title="Описание" type="text" name="description" value="<c:out value="${mealToEdit.description}"/>"></td>
+                <td><input title="Описание" type="text" name="description" placeholder="Описание еды..." value="${mealToEdit.description}"></td>
             </tr>
             <tr>
                 <td>Калории:</td>
-                <td><input title="Калории" type="text" name="calories" value="<c:out value="${mealToEdit.calories}"/>"></td>
+                <td><input title="Калории" type="text" name="calories" value="${mealToEdit.calories}"></td>
             </tr>
             </tbody>
         </table>
 
         <button type="submit" title="Подтвердить действие">
-            <c:out value="${mealToEdit.id == 0 ? 'Добавить': 'Изменить'}"/>
+            <c:out value="${isMealAddForm ? 'Добавить': 'Изменить'}"/>
         </button>
 
         <button type="submit" formaction="meals" title="Отмена изменений">Отмена</button>
     </form>
+
+    <a name="formJump"></a>
+    <script>
+        window.location = '#formJump';
+    </script>
+</c:if>
+<c:if test="${empty mealToEdit}">
+    <h4><a href="meals?action=add">Добавить еду...</a></h4>
 </c:if>
 
 </body>

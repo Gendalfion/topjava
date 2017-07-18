@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoMemoryImpl implements MealDao {
@@ -23,12 +24,33 @@ public class MealDaoMemoryImpl implements MealDao {
     }
 
     public void addTestDataToMap () {
-        add(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
+        /*add(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
         add(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000));
         add(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500));
         add(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
         add(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
-        add(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
+        add(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));*/
+        int startDate = 1;
+        int endDate = 15;
+        Month month = Month.MAY;
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+
+        for (int date = startDate; date <= endDate; date++) {
+            add(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(7, 12), rnd.nextInt(60))
+                    , "Завтрак"
+                    , rnd.nextInt(300, 900)));
+
+            add(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(12, 16), rnd.nextInt(60))
+                    , "Обед"
+                    , rnd.nextInt(500, 1500)));
+
+            add(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(17, 23), rnd.nextInt(60))
+                    , "Ужин"
+                    , rnd.nextInt(400, 1000)));
+        }
     }
 
     @Override

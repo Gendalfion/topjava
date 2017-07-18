@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @WebServlet("/meals")
 public class MealServlet extends HttpServlet {
@@ -23,41 +25,71 @@ public class MealServlet extends HttpServlet {
 
     private MealService mealService;
 
-    private final int userCaloriesMock = 2000;
-
     private final DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     @Override
     public void init() throws ServletException {
         super.init();
 
-        log.debug ("meals servlet initialization with memory mapped MealDaoMemoryImpl");
+        log.debug("meals servlet initialization with memory mapped MealDaoMemoryImpl");
         mealService = new MealServiceImpl(new MealDaoMemoryImpl());
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final String ENCODING = "UTF-8";
+
+        req.setCharacterEncoding(ENCODING);
+
         String action = req.getParameter("action");
         log.debug("doGet: {}?{}", req.getRequestURI(), req.getQueryString());
 
         if ("delete".equals(action)) {
-            int idToDelete = Integer.parseInt(req.getParameter("mealId"));
-            mealService.removeById(idToDelete);
-            resp.sendRedirect("meals");
-        } else if ("update_add".equals(action)) {
-            int idToUpdate = Integer.parseInt(req.getParameter("id"));
-            LocalDateTime dateTime = LocalDateTime.parse(req.getParameter("dateTime"), dtf);
-            String description = req.getParameter("description");
-            int calories = Integer.parseInt(req.getParameter("calories"));
+            String message = "";
+            String errorMessage = "";
 
-            mealService.update(new Meal(idToUpdate, dateTime, description, calories));
-            resp.sendRedirect("meals");
+            try {
+                int idToDelete = Integer.parseInt(req.getParameter("mealId"));
+                mealService.removeById(idToDelete);
+                message = "Данные из базы успешно удалены...";
+            } catch (Exception e) {
+                errorMessage = "Ошибка удаления данных из базы: " + e.getMessage();
+            }
+
+            message = URLEncoder.encode(message, ENCODING);
+            errorMessage = URLEncoder.encode(errorMessage, ENCODING);
+            resp.sendRedirect("meals?message=" + message + "&error=" + errorMessage);
+        } else if ("update_add".equals(action)) {
+            String message = "";
+            String errorMessage = "";
+
+            try {
+                int idToUpdate = Integer.parseInt(req.getParameter("id"));
+                LocalDateTime dateTime = LocalDateTime.parse(req.getParameter("dateTime"), dtf);
+                String description = req.getParameter("description");
+                int calories = Integer.parseInt(req.getParameter("calories"));
+
+                if (idToUpdate < 0) {
+                    mealService.add(new Meal(dateTime, description, calories));
+                } else {
+                    mealService.update(new Meal(idToUpdate, dateTime, description, calories));
+                }
+                message = "Данные успешно занесены в базу...";
+            } catch (Exception e) {
+                errorMessage = "Ошибка занасения данных в базу: " + e.getMessage();
+            }
+
+            message = URLEncoder.encode(message, ENCODING);
+            errorMessage = URLEncoder.encode(errorMessage, ENCODING);
+            resp.sendRedirect("meals?message=" + message + "&error=" + errorMessage);
         } else {
             if ("edit".equals(action)) {
                 int idToEdit = Integer.parseInt(req.getParameter("mealId"));
                 req.setAttribute("mealToEdit", mealService.getById(idToEdit));
+            } else if ("add".equals(action)) {
+                req.setAttribute("mealToEdit", new Meal(-1, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0));
             }
-            req.setAttribute("mealsWithExceed", mealService.getByCalories(userCaloriesMock));
+            req.setAttribute("mealsWithExceed", mealService.getByCalories(2000));
             RequestDispatcher view = req.getRequestDispatcher("meals.jsp");
             view.forward(req, resp);
         }
