@@ -10,21 +10,27 @@
         th {
             padding: 10px;
         }
+
         td {
             padding: 5px;
         }
+
         tbody > tr:hover {
             background-color: beige;
         }
+
         thead > tr {
             background-color: burlywood;
         }
+
         a {
             text-decoration: none;
         }
+
         a:hover {
             text-decoration: underline;
         }
+
         .message {
             color: green;
             background-color: lightblue;
@@ -33,6 +39,19 @@
         .error {
             color: red;
             background-color: #ffc9ba;
+        }
+
+        .button {
+            font: bold 11px Arial;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+            margin: 15px
         }
     </style>
 </head>
@@ -114,13 +133,11 @@
             <c:out value="${isMealAddForm ? 'Добавить': 'Изменить'}"/>
         </button>
 
-        <button type="submit" formaction="meals" title="Отмена изменений">Отмена</button>
+        <a href="meals" class="button">Отмена</a>
     </form>
 
-    <a name="formJump"></a>
-    <script>
-        window.location = '#formJump';
-    </script>
+    <%--Jumping to the form if form is visible:--%>
+    <a name="formJump"></a><script> window.location = '#formJump'; </script>
 </c:if>
 <c:if test="${empty mealToEdit}">
     <h4><a href="meals?action=add">Добавить еду...</a></h4>

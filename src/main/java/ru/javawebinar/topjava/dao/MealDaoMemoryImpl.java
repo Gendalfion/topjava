@@ -81,7 +81,7 @@ public class MealDaoMemoryImpl implements MealDao {
     @Override
     public void update(Meal meal) {
         int curId = curID.get();
-        if (meal.getId() >= curId) {
+        if (meal.getId() < 0 || meal.getId() >= curId) {
             LOG.warn("update: invalid id for update (id = {}, curId = {})", meal.getId(), curId);
         } else {
             Meal oldMeal = mealMap.put(meal.getId(), meal);
