@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 
+import ru.javawebinar.topjava.model.AuthorizedEntity;
 import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -10,8 +11,16 @@ public class ValidationUtil {
         checkNotFound(found, "id=" + id);
     }
 
+    public static void checkNotFoundWithAuthorization(boolean found, int id, Integer authorizedId) {
+        checkNotFound(found, "id=" + id + ", authorized id =" + authorizedId);
+    }
+
     public static <T> T checkNotFoundWithId(T object, int id) {
         return checkNotFound(object, "id=" + id);
+    }
+
+    public static <T> T checkNotFoundWithAuthorization(T object, Integer authorizedId) {
+        return checkNotFound(object, "authorized id=" + authorizedId);
     }
 
     public static <T> T checkNotFound(T object, String msg) {

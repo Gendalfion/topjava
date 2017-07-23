@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.util.Arrays;
@@ -23,6 +24,9 @@ public class SpringMain {
 
             MealRepository mealRepository = appCtx.getBean(MealRepository.class);
             mealRepository.getAll().forEach(System.out::println);
+
+            MealService mealService = appCtx.getBean(MealService.class);
+            mealService.getWithExceeded(1, 2000).forEach(System.out::println);
         }
     }
 }

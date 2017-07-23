@@ -15,11 +15,10 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    @Qualifier("inMemoryUserRepositoryImpl")
     private UserRepository repository;
 
-    public void setRepository(UserRepository repository) {
+    @Autowired
+    public UserServiceImpl(@Qualifier("inMemoryUserRepositoryImpl") UserRepository repository) {
         this.repository = repository;
     }
 

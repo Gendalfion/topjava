@@ -4,14 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal extends  BaseEntity {
+public class Meal extends  AuthorizedEntity {
     private final LocalDateTime dateTime;
 
     private final String description;
 
     private final int calories;
-
-    private Integer userId;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
@@ -22,11 +20,10 @@ public class Meal extends  BaseEntity {
     }
 
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories, Integer userId) {
-        super(id);
+        super(id, userId);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.userId = userId;
     }
 
     public LocalDateTime getDateTime() {
@@ -49,14 +46,6 @@ public class Meal extends  BaseEntity {
         return dateTime.toLocalTime();
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     @Override
     public String toString() {
         return "Meal{" +
@@ -64,7 +53,7 @@ public class Meal extends  BaseEntity {
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", userId=" + userId +
+                ", userId=" + getAuthorizationId() +
                 '}';
     }
 }
