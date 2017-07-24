@@ -14,12 +14,41 @@
             color: red;
         }
     </style>
+
+    <link rel="stylesheet" type="text/css" href="css/form.css">
 </head>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meal list</h2>
     <a href="meals?action=create">Add Meal</a>
+    <hr/>
+    <form method="get" action="meals">
+        <div class="block">
+            <dl>
+                <dt>From date:</dt>
+                <dd><input type="date" value="${param.startDate}" name="startDate"></dd>
+            </dl>
+            <dl>
+                <dt>To date:</dt>
+                <dd><input type="date" value="${param.endDate}" name="endDate"></dd>
+            </dl>
+        </div>
+        <div class="block">
+            <dl>
+                <dt>From time:</dt>
+                <dd><input type="time" value="${param.startTime}" name="startTime"></dd>
+            </dl>
+            <dl>
+                <dt>To time:</dt>
+                <dd><input type="time" value="${param.endTime}" name="endTime"></dd>
+            </dl>
+        </div>
+        <br/>
+
+        <button type="submit">Apply filter</button>
+        <button type="reset"><a href="meals">Clear filter</a></button>
+    </form>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
