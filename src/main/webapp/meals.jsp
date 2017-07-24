@@ -27,27 +27,27 @@
         <div class="block">
             <dl>
                 <dt>From date:</dt>
-                <dd><input type="date" value="${param.startDate}" name="startDate"></dd>
+                <dd><input type="date" value="${sessionScope.startDate}" name="startDate"></dd>
             </dl>
             <dl>
                 <dt>To date:</dt>
-                <dd><input type="date" value="${param.endDate}" name="endDate"></dd>
+                <dd><input type="date" value="${sessionScope.endDate}" name="endDate"></dd>
             </dl>
         </div>
         <div class="block">
             <dl>
                 <dt>From time:</dt>
-                <dd><input type="time" value="${param.startTime}" name="startTime"></dd>
+                <dd><input type="time" value="${sessionScope.startTime}" name="startTime"></dd>
             </dl>
             <dl>
                 <dt>To time:</dt>
-                <dd><input type="time" value="${param.endTime}" name="endTime"></dd>
+                <dd><input type="time" value="${sessionScope.endTime}" name="endTime"></dd>
             </dl>
         </div>
         <br/>
 
         <button type="submit">Apply filter</button>
-        <button type="reset"><a href="meals">Clear filter</a></button>
+        <button type="reset"><a href="meals?action=clear_filter">Clear filter</a></button>
     </form>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">

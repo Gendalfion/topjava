@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -14,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -80,15 +77,21 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
                 break;
+            case "clear_filter":
+                request.getSession().setAttribute("startDate", null);
+                request.getSession().setAttribute("startTime", null);
+                request.getSession().setAttribute("endDate", null);
+                request.getSession().setAttribute("endTime", null);
             case "all":
             default:
                 log.info("getAll");
+
                 request.setAttribute("meals",
                         mealController.getFilteredWithExceed(
-                                request.getParameter("startDate"),
-                                request.getParameter("startTime"),
-                                request.getParameter("endDate"),
-                                request.getParameter("endTime"))
+                                getSessionParam(request, "startDate"),
+                                getSessionParam(request, "startTime"),
+                                getSessionParam(request, "endDate"),
+                                getSessionParam(request, "endTime"))
                 );
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
@@ -100,5 +103,12 @@ public class MealServlet extends HttpServlet {
         return Integer.valueOf(paramId);
     }
 
-
+    private String getSessionParam(HttpServletRequest request, String param) {
+        String paramVal = request.getParameter(param);
+        if (paramVal == null || paramVal.isEmpty()) {
+            return (String) request.getSession().getAttribute(param);
+        }
+        request.getSession().setAttribute(param, paramVal);
+        return paramVal;
+    }
 }
