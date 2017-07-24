@@ -53,9 +53,22 @@ public class MealRestController {
         return service.getWithExceeded(AuthorizedUser.id(), AuthorizedUser.getCaloriesPerDay());
     }
 
-    public List<MealWithExceed> getFilteredWithExceed(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<MealWithExceed> getFilteredWithExceed(String startDateStr, String startTimeStr, String endDateStr, String endTimeStr) {
+        LocalDate startDate   = parseDate(startDateStr, LocalDate.MIN);
+        LocalTime startTime   = parseTime(startTimeStr, LocalTime.MIN);
+        LocalDate endDate     = parseDate(endDateStr, LocalDate.MAX);
+        LocalTime endTime     = parseTime(endTimeStr, LocalTime.MAX);
+
         log.info("getFilteredWithExceed, userId={}, caloriesPerDay={}, startDate={}, startTime={}, endDate={}, endTime={}"
                 , AuthorizedUser.id(), AuthorizedUser.getCaloriesPerDay(), startDate, startTime, endDate, endTime);
         return service.getFilteredWithExceeded(AuthorizedUser.id(), startDate, startTime, endDate, endTime, AuthorizedUser.getCaloriesPerDay());
+    }
+
+    private LocalDate parseDate(String date, LocalDate defaultDate) {
+        return (date == null || date.isEmpty()) ? defaultDate : LocalDate.parse(date);
+    }
+
+    private LocalTime parseTime(String time, LocalTime defaultTime) {
+        return (time == null || time.isEmpty()) ? defaultTime : LocalTime.parse(time);
     }
 }
