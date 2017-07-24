@@ -7,10 +7,13 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -20,7 +23,29 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(meal -> save(meal, 1));
+//        MealsUtil.MEALS.forEach(meal -> save(meal, 1));
+        int startDate = 1;
+        int endDate = 15;
+        Month month = Month.MAY;
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+
+        for (int date = startDate; date <= endDate; date++) {
+            int userId = rnd.nextInt(1, 4);
+            save(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(7, 12), rnd.nextInt(60))
+                    , "Завтрак"
+                    , rnd.nextInt(300, 900)), userId);
+
+            save(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(12, 16), rnd.nextInt(60))
+                    , "Обед"
+                    , rnd.nextInt(500, 1500)), userId);
+
+            save(new Meal(
+                    LocalDateTime.of(2017, month, date, rnd.nextInt(17, 23), rnd.nextInt(60))
+                    , "Ужин"
+                    , rnd.nextInt(400, 1000)), userId);
+        }
     }
 
     @Override
