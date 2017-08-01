@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.UserTestData;
@@ -156,4 +157,23 @@ public class MealServiceTest {
         compareWithDB(expectedMeals);
     }
 
+    @Test(expected = DuplicateKeyException.class)
+    public void testSaveMealWithEqualDateTime() throws Exception {
+        Meal userMeal = new Meal(LocalDateTime.parse("2015-05-30T13:00:00"), "duplicateDateTimeUserMeal", 200);
+        mealService.save(userMeal, UserTestData.USER_ID);
+    }
+
+    @Test(expected = DuplicateKeyException.class)
+    public void testUpdateMealWithEqualDateTime() throws Exception {
+        Meal duplicateDateTimeMeal = new Meal(START_SEQ + 1, LocalDateTime.parse("2015-05-31T20:00:00"), "duplicateDateTimeUserMeal", 200);
+        mealService.update(duplicateDateTimeMeal, UserTestData.USER_ID);
+    }
+
+    @Test
+    public void testSaveDuplicateDateTimeMealForOtherUser() throws Exception {
+        Meal adminMeal = new Meal(LocalDateTime.parse("2015-05-30T13:00:00"), "notDuplicateMealForAdmin", 200);
+        adminMeal.setId(mealService.save(adminMeal, UserTestData.ADMIN_ID).getId());
+        Meal storedMeal = mealService.get(adminMeal.getId(), UserTestData.ADMIN_ID);
+        MATCHER.assertEquals(adminMeal, storedMeal);
+    }
 }
