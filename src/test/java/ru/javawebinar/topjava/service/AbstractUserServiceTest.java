@@ -17,7 +17,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractTest {
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +29,7 @@ public abstract class AbstractUserServiceTest extends AbstractTest {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());
+        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER, USER_WO_MEAL), service.getAll());
     }
 
     @Test(expected = DataAccessException.class)
@@ -40,7 +40,7 @@ public abstract class AbstractUserServiceTest extends AbstractTest {
     @Test
     public void testDelete() throws Exception {
         service.delete(USER_ID);
-        MATCHER.assertCollectionEquals(Collections.singletonList(ADMIN), service.getAll());
+        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, USER_WO_MEAL), service.getAll());
     }
 
     @Test(expected = NotFoundException.class)
@@ -68,7 +68,7 @@ public abstract class AbstractUserServiceTest extends AbstractTest {
     @Test
     public void testGetAll() throws Exception {
         Collection<User> all = service.getAll();
-        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, USER), all);
+        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, USER, USER_WO_MEAL), all);
     }
 
     @Test
@@ -78,5 +78,26 @@ public abstract class AbstractUserServiceTest extends AbstractTest {
         updated.setCaloriesPerDay(330);
         service.update(updated);
         MATCHER.assertEquals(updated, service.get(USER_ID));
+    }
+
+    @Test
+    public void testGetWithMeals() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("This service does not support getWithMeal operation");
+        service.getWithMeals(USER_ID);
+    }
+
+    @Test
+    public void testGetWithoutMeals() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("This service does not support getWithMeal operation");
+        service.getWithMeals(USER_WO_MEAL_ID);
+    }
+
+    @Test
+    public void testGetWithMealsNotFound() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("This service does not support getWithMeal operation");
+        service.getWithMeals(1);
     }
 }

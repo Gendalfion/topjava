@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.service;
 
 
+import org.springframework.data.util.Pair;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -21,4 +23,6 @@ public interface UserService {
     void evictCache();
 
     List<User> getAll();
+
+    Pair<User, List<Meal>> getWithMeals(int id);
 }
