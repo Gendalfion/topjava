@@ -14,11 +14,12 @@ import java.util.Arrays;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_WO_MEAL_ID;
 
 
 public abstract class AbstractMealServiceTest extends AbstractTest {
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @Test
     public void testDelete() throws Exception {
@@ -81,5 +82,19 @@ public abstract class AbstractMealServiceTest extends AbstractTest {
                 service.getBetweenDates(
                         LocalDate.of(2015, Month.MAY, 30),
                         LocalDate.of(2015, Month.MAY, 30), USER_ID));
+    }
+
+    @Test
+    public void testGetWithUser() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("This service does not support getWithUser operation");
+        service.getWithUser(MEAL1_ID, USER_ID);
+    }
+
+    @Test
+    public void testGetWithUserNotFound() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("This service does not support getWithUser operation");
+        service.getWithUser(MEAL1_ID, USER_WO_MEAL_ID);
     }
 }
