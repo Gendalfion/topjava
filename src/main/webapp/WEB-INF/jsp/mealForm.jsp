@@ -1,12 +1,21 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h2>${requestScope.get("action") == 'create' ? 'Create meal' : 'Edit meal'}</h2>
+    <h2>
+        <c:set var="isCreateForm" value="${requestScope.get('action') == 'create'}"/>
+        <c:if test="${isCreateForm}">
+            <spring:message code="meal.form.title.create"/>
+        </c:if>
+        <c:if test="${!isCreateForm}">
+            <spring:message code="meal.form.title.update"/>
+        </c:if>
+    </h2>
     <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="add">

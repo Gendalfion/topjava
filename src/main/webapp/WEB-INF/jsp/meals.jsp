@@ -2,12 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h3>Meals</h3>
+    <h3><spring:message code="meal.title"/></h3>
     <form method="post" action="meals">
         <dl>
             <dt>From Date:</dt>
@@ -50,8 +52,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals/update?id=${meal.id}">Update</a></td>
-                <td><a href="meals/delete?id=${meal.id}">Delete</a></td>
+                <td><a href="meals/update?id=${meal.id}"><spring:message code="app.update"/></a></td>
+                <td><a href="meals/delete?id=${meal.id}"><spring:message code="app.delete"/></a></td>
             </tr>
         </c:forEach>
     </table>
