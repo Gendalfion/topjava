@@ -14,14 +14,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN;
+import static ru.javawebinar.topjava.UserTestData.MATCHER;
+import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected UserService service;
 
-    @Autowired (required = false)
+    @Autowired(required = false)
     protected JpaUtil jpaUtil;
 
     @Before
@@ -84,6 +87,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.getRoles().clear();
+        updated.getRoles().add(Role.ROLE_ADMIN);
         service.update(updated);
         MATCHER.assertEquals(updated, service.get(USER_ID));
     }

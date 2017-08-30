@@ -20,7 +20,13 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
@@ -60,10 +66,24 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 Number newKey = insertUser.executeAndReturnKey(parameterSource);
                 user.setId(newKey.intValue());
 
-                Set<Role> roleSet = user.getRoles();
-                if (roleSet != null && roleSet.size() >= 1) {
-                    final List<Role> roles = new ArrayList<>(user.getRoles());
-                    jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?, ?)", new BatchPreparedStatementSetter() {
+                saveUserRoles(user);
+            } else {
+                namedParameterJdbcTemplate.update(
+                        "UPDATE users SET name=:name, email=:email, password=:password, " +
+                                "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
+                jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
+                saveUserRoles(user);
+            }
+            return user;
+        });
+    }
+
+    private void saveUserRoles(User user) {
+        Set<Role> roleSet = user.getRoles();
+        if (roleSet != null && roleSet.size() >= 1) {
+            final List<Role> roles = new ArrayList<>(user.getRoles());
+            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?, ?)"
+                    , new BatchPreparedStatementSetter() {
                         @Override
                         public void setValues(PreparedStatement ps, int i) throws SQLException {
                             ps.setInt(1, user.getId());
@@ -75,14 +95,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                             return roles.size();
                         }
                     });
-                }
-            } else {
-                namedParameterJdbcTemplate.update(
-                        "UPDATE users SET name=:name, email=:email, password=:password, " +
-                                "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
-            }
-            return user;
-        });
+        }
     }
 
     @Override

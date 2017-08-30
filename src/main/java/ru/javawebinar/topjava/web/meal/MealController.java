@@ -19,6 +19,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
+@RequestMapping("/meals")
 public class MealController extends MealRestController {
 
     @Autowired
@@ -26,13 +27,13 @@ public class MealController extends MealRestController {
         super(service);
     }
 
-    @RequestMapping(value = "/meals", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String mealsReq(Model model) {
         model.addAttribute("meals", getAll());
         return "meals";
     }
 
-    @RequestMapping(value = "/meals/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addMealReq(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
@@ -47,7 +48,7 @@ public class MealController extends MealRestController {
         return "redirect:/meals";
     }
 
-    @RequestMapping(value = "/meals/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String createReq(Model model) {
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         model.addAttribute("meal", meal);
@@ -55,7 +56,7 @@ public class MealController extends MealRestController {
         return "mealForm";
     }
 
-    @RequestMapping(value = "/meals/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String updateReq(HttpServletRequest request, Model model) {
         final Meal meal = get(getId(request));
         model.addAttribute("meal", meal);
@@ -63,13 +64,13 @@ public class MealController extends MealRestController {
         return "mealForm";
     }
 
-    @RequestMapping(value = "/meals/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String deleteReq(HttpServletRequest request) {
         delete(getId(request));
         return "redirect:/meals";
     }
 
-    @RequestMapping(value = "/meals", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public String filterReq(HttpServletRequest request, Model model) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
