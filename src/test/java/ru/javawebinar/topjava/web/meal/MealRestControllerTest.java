@@ -11,6 +11,8 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
+import ru.javawebinar.topjava.web.formatters.DateFormatter;
+import ru.javawebinar.topjava.web.formatters.TimeFormatter;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.time.LocalDate;
@@ -19,6 +21,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -78,7 +81,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetBetween() throws Exception {
+    public void testGetBetweenSpringFormatting() throws Exception {
         final LocalDateTime startTime = LocalDateTime.of(LocalDate.of(2015, Month.MAY, 30), LocalTime.of(10, 0));
         final LocalDateTime endTime = LocalDateTime.of(startTime.toLocalDate(), LocalTime.of(13, 0));
         final List<MealWithExceed> meals = MealsUtil.getWithExceeded(MEALS, UserTestData.USER.getCaloriesPerDay());
@@ -104,5 +107,27 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
         MATCHER.assertEquals(newMeal, returned);
         MATCHER.assertListEquals(Arrays.asList(newMeal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), mealService.getAll(USER_ID));
+    }
+
+    @Test
+    public void testGetBetweenCustomFormatting() throws Exception {
+        final DateFormatter dateFormatter = new DateFormatter();
+        final String startDate = dateFormatter.print(LocalDate.of(2015, Month.MAY, 31), Locale.getDefault());
+
+        final TimeFormatter timeFormatter = new TimeFormatter();
+        final String endTime = timeFormatter.print(LocalTime.of(13, 0), Locale.getDefault());
+
+        final List<MealWithExceed> meals = MealsUtil.getWithExceeded(MEALS, UserTestData.USER.getCaloriesPerDay());
+        mockMvc.perform(
+                post(REST_URL + "between/custom")
+                        .content("startDate=" + startDate +
+                                "&startTime=" +
+                                "&endDate=" +
+                                "&endTime=" + endTime)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(EXCEED_BEAN_MATCHER.contentListMatcher(meals.get(1), meals.get(2)));
     }
 }
