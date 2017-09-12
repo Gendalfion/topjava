@@ -65,7 +65,9 @@
                     <th><spring:message code="meal.dateTime"/></th>
                     <th><spring:message code="meal.description"/></th>
                     <th><spring:message code="meal.calories"/></th>
-                    <th colspan="2"><spring:message code="common.actions"/></th>
+                    <th></th>
+                    <th></th>
+                    <%--<th colspan="2"><spring:message code="common.actions"/></th>--%>
                 </tr>
                 </thead>
                 <c:forEach items="${meals}" var="meal">
@@ -80,7 +82,7 @@
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
                         <td><a><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                        <td><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                        <td><a><span class="glyphicon glyphicon-remove delete" aria-hidden="true" id="${meal.id}"></span></a></td>
                     </tr>
                 </c:forEach>
             </table>
