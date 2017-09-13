@@ -34,3 +34,7 @@ header, footer {
 .glyphicon {
     cursor: pointer;
 }
+
+.disabledStyle {
+    color: #858585;
+}

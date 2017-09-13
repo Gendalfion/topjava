@@ -3,7 +3,14 @@ var datatableApi;
 
 var updateUserEnabled = function (id) {
     var enabled = $("#" + id + " input[type=checkbox]").is(":checked");
-    // alert(enabled);
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl + id + "/enabled/" + enabled,
+        success: function () {
+            $("#" + id).toggleClass( "disabledStyle", !enabled );
+            successNoty("User " + (enabled ? "enabled" : "disabled"));
+        }
+    });
 };
 
 // $(document).ready(function () {

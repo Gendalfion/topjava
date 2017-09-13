@@ -23,4 +23,6 @@ public interface UserService {
     List<User> getAll();
 
     User getWithMeals(int id);
+
+    void setEnabled(int id, boolean enabled);
 }
