@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8 panel panel-body panel-default">
-                    <form method="post" action="meals/filter">
+                    <form method="post" action="meals/filter" class="form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="startDate"><spring:message
                                     code="meal.startDate"/>:</label>
@@ -56,9 +56,10 @@
                 <div class="col-sm-2"></div>
             </div>
 
-            <hr>
-            <a href="meals/create"><spring:message code="meal.add"/></a>
-            <hr>
+            <div class="row text-center">
+                <a onclick="add()" class="btn btn-primary"><spring:message code="meal.add"/></a>
+            </div>
+
             <table class="table table-striped display" id="datatable">
                 <thead>
                 <tr>
@@ -82,10 +83,49 @@
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
                         <td><a><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-                        <td><a><span class="glyphicon glyphicon-remove delete" aria-hidden="true" id="${meal.id}"></span></a></td>
+                        <td><a><span class="glyphicon glyphicon-remove delete" aria-hidden="true"
+                                     id="${meal.id}"></span></a></td>
                     </tr>
                 </c:forEach>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title"><spring:message code="meal.add"/></h2>
+                <form method="post" id="detailsForm" class="form-horizontal">
+                    <input value="" name="id" hidden title=""/>
+                    <div class="form-group text-center">
+                        <label class="control-label col-sm-3" for="dateTime"><spring:message
+                                code="meal.dateTime"/>:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="datetime-local" name="dateTime" id="dateTime"/>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="control-label col-sm-3" for="description"><spring:message
+                                code="meal.description"/>:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" name="description" id="description"/>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <label class="control-label col-sm-3" for="calories"><spring:message
+                                code="meal.calories"/>:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" name="calories" id="calories"/>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <button type="submit" class="btn btn-primary"><spring:message code="common.save"/></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

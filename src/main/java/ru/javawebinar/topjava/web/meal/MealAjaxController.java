@@ -1,12 +1,12 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.javawebinar.topjava.model.Role;
-import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.web.user.AbstractUserController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,15 +26,15 @@ public class MealAjaxController extends AbstractMealController {
         super.delete(id);
     }
 
-    /*@PostMapping
+    @PostMapping
     public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("name") String name,
-                               @RequestParam("email") String email,
-                               @RequestParam("password") String password) {
+                               @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
+                               @RequestParam("description") String description,
+                               @RequestParam(name = "calories", defaultValue = "0") int calories) {
 
-        User user = new User(id, name, email, password, Role.ROLE_USER);
-        if (user.isNew()) {
-            super.create(user);
+        Meal meal = new Meal(id, dateTime, description, calories);
+        if (meal.isNew()) {
+            super.create(meal);
         }
-    }*/
+    }
 }
