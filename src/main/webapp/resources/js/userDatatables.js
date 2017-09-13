@@ -1,6 +1,11 @@
 var ajaxUrl = "ajax/admin/users/";
 var datatableApi;
 
+var updateUserEnabled = function (id) {
+    var enabled = $("#" + id + " input[type=checkbox]").is(":checked");
+    // alert(enabled);
+};
+
 // $(document).ready(function () {
 $(function () {
     datatableApi = $("#datatable").DataTable({
