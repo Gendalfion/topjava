@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8 panel panel-body panel-default">
-                    <form method="post" action="meals/filter" class="form-horizontal">
+                    <form class="form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="startDate"><spring:message
                                     code="meal.startDate"/>:</label>
@@ -50,7 +50,7 @@
                                        value="${param.endTime}">
                             </div>
                         </div>
-                        <button type="submit"><spring:message code="meal.filter"/></button>
+                        <button type="button" class="btn btn-primary" onclick="updateTable()"><spring:message code="meal.filter"/></button>
                     </form>
                 </div>
                 <div class="col-sm-2"></div>
