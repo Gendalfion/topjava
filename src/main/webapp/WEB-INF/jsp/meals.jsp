@@ -50,7 +50,10 @@
                                        value="${param.endTime}">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="updateTable()"><spring:message code="meal.filter"/></button>
+
+                        <button type="submit" class="btn btn-primary" onclick="updateTable(); return false;">
+                            <spring:message code="meal.filter"/>
+                        </button>
                     </form>
                 </div>
                 <div class="col-sm-2"></div>
