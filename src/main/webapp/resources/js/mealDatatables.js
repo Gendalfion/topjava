@@ -25,6 +25,15 @@ var updateTable = function () {
     }
 };
 
+function clearFilter() {
+    $('#startDate').val("");
+    $('#startTime').val("");
+    $('#endDate').val("");
+    $('#endTime').val("");
+
+    updateAll();
+}
+
 // $(document).ready(function () {
 $(function () {
     datatableApi = $("#datatable").DataTable({

@@ -15,7 +15,6 @@
         <div class="shadow">
             <h3><spring:message code="meal.title"/></h3>
 
-
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8 panel panel-body panel-default">
@@ -51,9 +50,15 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" onclick="updateTable(); return false;">
-                            <spring:message code="meal.filter"/>
-                        </button>
+                        <div class="row text-center">
+                            <button type="submit" class="btn btn-primary" onclick="updateTable(); return false;">
+                                <spring:message code="meal.filter"/>
+                            </button>
+
+                            <button type="button" class="btn btn-danger" onclick="clearFilter()" style="margin-left: 10px">
+                                <spring:message code="common.clear"/>
+                            </button>
+                        </div>
                     </form>
                 </div>
                 <div class="col-sm-2"></div>
