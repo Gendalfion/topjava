@@ -65,4 +65,22 @@ $(function () {
         },
         "initComplete": makeEditable
     });
+
+    initDatetimePickers();
+
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d H:i',
+        onChangeDateTime: function (format, $input) {
+            var isoFmtDateTime = $input.val().replace(' ', 'T');
+            $('#dateTimeIsoFormat').val(isoFmtDateTime);
+        }
+    });
+
+    var updateFormFromRow = updateRow;
+    updateRow = function (id) {
+        updateFormFromRow(id).then(function () {
+            var isoDateTime = $('#dateTimeIsoFormat').val();
+            $('#dateTime').val(isoDateTime.substring(0, 16).replace('T', ' '));
+        });
+    }
 });

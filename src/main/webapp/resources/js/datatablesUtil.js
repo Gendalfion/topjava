@@ -10,6 +10,20 @@ function makeEditable() {
     $.ajaxSetup({cache: false});
 }
 
+function initDatetimePickers() {
+    jQuery.datetimepicker.setLocale(i18n["locale"]);
+
+    $('.datepicker').datetimepicker({
+        timepicker:false,
+        format:'Y-m-d'
+    });
+
+    $('.timepicker').datetimepicker({
+        datepicker:false,
+        format:'H:i'
+    });
+}
+
 function add() {
     $("#modalTitle").html(i18n["addTitle"]);
     form.find(":input").val("");
@@ -18,7 +32,7 @@ function add() {
 
 function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
-    $.get(ajaxUrl + id, function (data) {
+    return $.get(ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             form.find("input[name='" + key + "']").val(value);
         });
