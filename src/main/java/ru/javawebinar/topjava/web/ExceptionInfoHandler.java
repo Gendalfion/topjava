@@ -33,6 +33,13 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true);
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public ErrorInfo handleError(HttpServletRequest req, IllegalArgumentException e) {
+        return logAndGetErrorInfo(req, e, true);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     @ResponseBody
