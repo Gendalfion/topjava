@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.List;
 
 public interface UserService {
+    String USER_WITH_THIS_EMAIL_ALREADY_EXISTS = "User with this email already exists";
 
     User create(User user);
 

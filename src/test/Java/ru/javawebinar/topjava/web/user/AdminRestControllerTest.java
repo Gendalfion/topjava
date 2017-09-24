@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.service.UserService.USER_WITH_THIS_EMAIL_ALREADY_EXISTS;
 
 public class AdminRestControllerTest extends AbstractControllerTest {
 
@@ -111,6 +113,18 @@ public class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testUpdateWithDupEmail() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JSON_USER_UPDATE_WITH_DUP_EMAIL))
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains(USER_WITH_THIS_EMAIL_ALREADY_EXISTS));
+    }
+
+    @Test
     public void testCreate() throws Exception {
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,6 +148,18 @@ public class AdminRestControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains("\"detail\":\"name must not be blank\""));
+    }
+
+    @Test
+    public void testCreateWithDupEmail() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JSON_NEW_USER_WITH_DUP_EMAIL))
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains(USER_WITH_THIS_EMAIL_ALREADY_EXISTS));
     }
 
     @Test

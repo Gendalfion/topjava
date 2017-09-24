@@ -9,6 +9,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface MealService {
+    String DUPLICATE_MEAL_DATE_TIME = "Meal with this date-time already exists";
+
     Meal get(int id, int userId) throws NotFoundException;
 
     void delete(int id, int userId) throws NotFoundException;

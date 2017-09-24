@@ -2,18 +2,20 @@ package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.exception.DuplicateMealDateTimeException;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealServiceImpl implements MealService {
-
     private final MealRepository repository;
 
     @Autowired
@@ -44,14 +46,33 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
+    @Transactional
     public Meal update(Meal meal, int userId) {
+        assureMealDateTimeUnique(meal, userId);
         return checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
     @Override
+    @Transactional
     public Meal create(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
+        assureMealDateTimeUnique(meal, userId);
         return repository.save(meal, userId);
+    }
+
+    private void assureMealDateTimeUnique(Meal meal, int userId) {
+        if (meal.getDateTime() == null) {
+            return;
+        }
+
+        LocalDateTime dateTime = meal.getDateTime().truncatedTo(ChronoUnit.MINUTES);
+        List<Meal> foundMeal = getBetweenDateTimes(dateTime, dateTime, userId);
+        Assert.isTrue(foundMeal.size() <= 1, "must find not more than 1 meal with specific date-time");
+        if (!foundMeal.isEmpty()) {
+            if (meal.isNew() || !foundMeal.get(0).getId().equals(meal.getId())) {
+                throw new DuplicateMealDateTimeException(DUPLICATE_MEAL_DATE_TIME);
+            }
+        }
     }
 
     @Override

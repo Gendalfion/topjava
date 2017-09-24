@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +37,9 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
-    @ExceptionHandler(DuplicateUserEmailException.class)
+    @ExceptionHandler(DuplicateKeyException.class)
     @ResponseBody
-    public ErrorInfo duplicateUserEmail(HttpServletRequest req, DuplicateUserEmailException e) {
+    public ErrorInfo duplicateUserEmail(HttpServletRequest req, DuplicateKeyException e) {
         return logAndGetErrorInfo(req, e, false);
     }
 

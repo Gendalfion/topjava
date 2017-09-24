@@ -32,6 +32,12 @@ public class MealTestData {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
 
+    public static Meal getCreatedWithDuplicateDateTime() {
+        Meal created = getCreated();
+        created.setDateTime(MEAL1.getDateTime());
+        return created;
+    }
+
     public static Meal getCreatedNotValid() {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Неправильный ужин", 3);
     }
@@ -42,5 +48,11 @@ public class MealTestData {
 
     public static Meal getUpdatedNotValid() {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "", 200);
+    }
+
+    public static Meal getUpdatedWithDuplicateDateTime() {
+        Meal updated = getUpdated();
+        updated.setDateTime(MEAL2.getDateTime());
+        return updated;
     }
 }

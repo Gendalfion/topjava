@@ -28,6 +28,8 @@ public class UserTestData {
 
     public static final User NEW_USER = new User(null, "New", "new@gmail.com", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
     public static final String JSON_NEW_USER_WITH_PASSWORD = "{\"name\":\"New\",\"email\":\"new@gmail.com\",\"password\":\"password\",\"enabled\":true,\"registered\":\"2017-09-20T09:12:40.953+0000\",\"roles\":[\"ROLE_USER\",\"ROLE_ADMIN\"],\"caloriesPerDay\":2300}";
+    public static final String JSON_NEW_USER_WITH_DUP_EMAIL = "{\"name\":\"NewWithDupEmail\",\"email\":\"user@yandex.ru\",\"password\":\"password\",\"enabled\":true,\"registered\":\"2017-09-20T09:12:40.953+0000\",\"roles\":[\"ROLE_USER\",\"ROLE_ADMIN\"],\"caloriesPerDay\":2010}";
+    public static final String JSON_USER_UPDATE_WITH_DUP_EMAIL = "{\"name\":\"UpdatedWithDupEmail\",\"email\":\"admin@gmail.com\",\"password\":\"password\",\"enabled\":true,\"registered\":\"2017-09-20T09:12:40.953+0000\",\"roles\":[\"ROLE_USER\",\"ROLE_ADMIN\"],\"caloriesPerDay\":2040}";
     public static final String JSON_UPDATED_USER_WITH_PASSWORD = "{\"name\":\"UpdatedName\",\"email\":\"updated@gmail.com\",\"password\":\"password\",\"roles\":[\"ROLE_USER\",\"ROLE_ADMIN\"],\"caloriesPerDay\":2100}";
     public static final String JSON_NOT_VALID_USER = "{\"email\":\"notvalid@gmail.com\",\"password\":\"password\",\"enabled\":true,\"registered\":\"2017-09-20T09:12:40.953+0000\",\"roles\":[\"ROLE_USER\",\"ROLE_ADMIN\"],\"caloriesPerDay\":2300}";
 }

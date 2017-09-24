@@ -24,8 +24,6 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("userService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private static final String USER_WITH_THIS_EMAIL_ALREADY_EXISTS = "User with this email already exists";
-
     private final UserRepository repository;
 
     @Autowired
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return checkNotFound(repository.getByEmail(email), "email=" + email);
     }
 
-    @Transactional
     private void assureNoEmailDuplication(Integer id, String email) {
         User byEmail = repository.getByEmail(email.toLowerCase());
         if (byEmail != null && !byEmail.getId().equals(id)) {
@@ -79,6 +76,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
+    @Transactional
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");

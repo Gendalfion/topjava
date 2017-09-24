@@ -20,10 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.MealTestData.getCreatedWithDuplicateDateTime;
 import static ru.javawebinar.topjava.MealTestData.MATCHER;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
+import static ru.javawebinar.topjava.service.MealService.DUPLICATE_MEAL_DATE_TIME;
 
 public class MealRestControllerTest extends AbstractControllerTest {
 
@@ -85,6 +87,20 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testUpdateWithDupDateTime() throws Exception {
+        Meal notValid = getUpdatedWithDuplicateDateTime();
+
+        MvcResult mvcResult = mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(notValid))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains(DUPLICATE_MEAL_DATE_TIME));
+    }
+
+    @Test
     public void testUpdateNotValid() throws Exception {
         Meal notValid = getUpdatedNotValid();
 
@@ -111,6 +127,20 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
         MATCHER.assertEquals(created, returned);
         MATCHER.assertListEquals(Arrays.asList(ADMIN_MEAL2, created, ADMIN_MEAL1), service.getAll(ADMIN_ID));
+    }
+
+    @Test
+    public void testCreateWithDupDateTime() throws Exception {
+        Meal notValid = getCreatedWithDuplicateDateTime();
+
+        MvcResult mvcResult = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(notValid))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains(DUPLICATE_MEAL_DATE_TIME));
     }
 
     @Test
