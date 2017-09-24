@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.DuplicateUserEmailException;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -32,6 +33,13 @@ public class ExceptionInfoHandler {
     @ResponseBody
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         return logAndGetErrorInfo(req, e, true);
+    }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
+    @ExceptionHandler(DuplicateUserEmailException.class)
+    @ResponseBody
+    public ErrorInfo duplicateUserEmail(HttpServletRequest req, DuplicateUserEmailException e) {
+        return logAndGetErrorInfo(req, e, false);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
