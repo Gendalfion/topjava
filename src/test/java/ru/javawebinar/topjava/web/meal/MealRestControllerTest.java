@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -83,6 +85,20 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testUpdateNotValid() throws Exception {
+        Meal notValid = getUpdatedNotValid();
+
+        MvcResult mvcResult = mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(notValid))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains("description must not be blank"));
+    }
+
+    @Test
     public void testCreate() throws Exception {
         Meal created = getCreated();
         ResultActions action = mockMvc.perform(post(REST_URL)
@@ -95,6 +111,20 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
         MATCHER.assertEquals(created, returned);
         MATCHER.assertListEquals(Arrays.asList(ADMIN_MEAL2, created, ADMIN_MEAL1), service.getAll(ADMIN_ID));
+    }
+
+    @Test
+    public void testCreateNotValid() throws Exception {
+        Meal notValid = getCreatedNotValid();
+
+        MvcResult mvcResult = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(notValid))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains("calories must be between 10 and 5000"));
     }
 
     @Test

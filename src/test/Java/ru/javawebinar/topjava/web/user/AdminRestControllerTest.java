@@ -1,10 +1,11 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.TestUtil;
-import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
@@ -83,16 +84,30 @@ public class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        User updated = new User(USER);
-        updated.setName("UpdatedName");
-        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
         mockMvc.perform(put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(updated)))
+                .content(JSON_UPDATED_USER_WITH_PASSWORD))
                 .andExpect(status().isOk());
 
+        User updated = JsonUtil.readValue(JSON_UPDATED_USER_WITH_PASSWORD, User.class);
+        updated.setId(USER_ID);
         MATCHER.assertEquals(updated, userService.get(USER_ID));
+    }
+
+    @Test
+    public void testUpdateNotValid() throws Exception {
+        User notValid = new User(USER);
+        notValid.setPassword("");
+        MvcResult mvcResult = mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JsonUtil.writeValue(notValid)))
+                .andExpect(status().isUnprocessableEntity())
+                .andDo(print())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains("\"detail\":\"password must not be blank\""));
     }
 
     @Test
@@ -107,6 +122,18 @@ public class AdminRestControllerTest extends AbstractControllerTest {
 
         MATCHER.assertEquals(NEW_USER, returned);
         MATCHER.assertListEquals(Arrays.asList(ADMIN, NEW_USER, USER), userService.getAll());
+    }
+
+    @Test
+    public void testCreateNotValid() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JSON_NOT_VALID_USER))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        Assert.assertTrue(mvcResult.getResponse().getContentAsString().contains("\"detail\":\"name must not be blank\""));
     }
 
     @Test

@@ -32,7 +32,15 @@ public class MealTestData {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
 
+    public static Meal getCreatedNotValid() {
+        return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Неправильный ужин", 3);
+    }
+
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
+    }
+
+    public static Meal getUpdatedNotValid() {
+        return new Meal(MEAL1_ID, MEAL1.getDateTime(), "", 200);
     }
 }
