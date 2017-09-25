@@ -442,7 +442,7 @@
                     <con:params/>
                     <con:element xmlns:meal="http://localhost/topjava/rest/profile/meals">meal:Response</con:element>
                 </con:representation>
-                <con:request name="MealsСreate" id="2bb0c527-598d-41c3-b435-76ebe5b8566d" mediaType="application/json" postQueryString="false">
+                <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="MealsСreate" id="2bb0c527-598d-41c3-b435-76ebe5b8566d" mediaType="application/json" postQueryString="false">
                     <con:settings>
                         <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                     <con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">true</con:setting></con:settings>
