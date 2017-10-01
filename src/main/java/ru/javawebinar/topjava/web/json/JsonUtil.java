@@ -64,18 +64,4 @@ public class JsonUtil {
             throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
         }
     }
-
-    public static <T> String writeWithExtraProps(T obj, String extraName, Object extraValue) {
-        return writeWithExtraProps(obj, Collections.singletonMap(extraName, extraValue));
-    }
-
-    public static <T> String writeWithExtraProps(T obj, Map<String, Object> extraProps) {
-        try {
-            Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<Map<String, Object>>() {});
-            map.putAll(extraProps);
-            return getMapper().writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
-        }
-    }
 }
